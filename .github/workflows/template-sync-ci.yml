@@ -41,7 +41,7 @@ jobs:
       - name: Sync impact strict check
         run: |
           if git rev-parse HEAD~1 >/dev/null 2>&1; then
-            python3 scripts/template/check_sync_impact.py HEAD~1 --target-ref HEAD --output text --strict
+            python3 scripts/template/check_sync_impact.py HEAD~1 --target-ref HEAD --output text --summary-only --strict
           else
             echo "Skip strict diff check: repository has no HEAD~1"
           fi

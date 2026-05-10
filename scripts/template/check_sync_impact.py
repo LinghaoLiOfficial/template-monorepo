@@ -299,11 +299,23 @@ def print_text(base_ref: str, target_ref: str, classified: dict[str, list[str]])
     group('unknown')
 
 
+def print_summary_text(base_ref: str, target_ref: str, manifest_version: int, changed_count: int, classified: dict[str, list[str]]) -> None:
+    print(f'Base ref: {base_ref}')
+    print(f'Target ref: {target_ref}')
+    print(f'Manifest version: {manifest_version}')
+    print(f'Changed files: {changed_count}')
+    print(f"AUTO_APPLY: {len(classified['auto_apply'])}")
+    print(f"MERGE_APPLY: {len(classified['merge_apply'])}")
+    print(f"MANUAL_ONLY: {len(classified['manual_only'])}")
+    print(f"UNKNOWN: {len(classified['unknown'])}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('base_ref', nargs='?', help='base git ref, e.g. template-v1.2.0')
     parser.add_argument('--target-ref', default='HEAD', help='target git ref, default HEAD')
     parser.add_argument('--output', choices=['text', 'json'], default='text')
+    parser.add_argument('--summary-only', action='store_true', help='output counts only without file details')
     parser.add_argument('--strict', action='store_true', help='return non-zero when unknown files exist')
     parser.add_argument('--validate-only', action='store_true', help='validate manifest only and exit')
     args = parser.parse_args()
@@ -329,21 +341,34 @@ def main() -> int:
     changed = get_changed_files(args.base_ref, args.target_ref)
     classified = classify_files(changed, manifest.zones)
 
+    payload = {
+        'base_ref': args.base_ref,
+        'target_ref': args.target_ref,
+        'manifest_version': manifest.version,
+        'changed_count': len(changed),
+        'counts': {
+            'auto_apply': len(classified['auto_apply']),
+            'merge_apply': len(classified['merge_apply']),
+            'manual_only': len(classified['manual_only']),
+            'unknown': len(classified['unknown']),
+        },
+    }
+    if not args.summary_only:
+        payload.update(classified)
+
     if args.output == 'json':
-        print(
-            json.dumps(
-                {
-                    'base_ref': args.base_ref,
-                    'target_ref': args.target_ref,
-                    'manifest_version': manifest.version,
-                    'changed_count': len(changed),
-                    **classified,
-                },
-                ensure_ascii=False,
-            )
-        )
+        print(json.dumps(payload, ensure_ascii=False))
     else:
-        print_text(args.base_ref, args.target_ref, classified)
+        if args.summary_only:
+            print_summary_text(
+                args.base_ref,
+                args.target_ref,
+                manifest.version,
+                len(changed),
+                classified,
+            )
+        else:
+            print_text(args.base_ref, args.target_ref, classified)
 
     if args.strict and classified['unknown']:
         return 3

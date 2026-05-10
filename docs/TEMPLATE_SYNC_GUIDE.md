@@ -113,7 +113,7 @@ scripts/post_sync_verify.sh
 
 - 校验 manifest 严格合法（`--validate-only`）。
 - 校验同步脚本具备 `--dry-run` 路径。
-- 在模板自身仓库，使用 `HEAD~1 -> HEAD` 做 `--strict` 分区检查。
+- 在模板自身仓库，使用 `HEAD~1 -> HEAD` 做 `--summary-only --strict` 分区检查。
 
 参考工作流：`.github/workflows/template-sync-ci.yml`。
 

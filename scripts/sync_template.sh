@@ -86,6 +86,7 @@ report = {
         "manual_only": len(impact.get("manual_only", [])),
         "unknown": len(impact.get("unknown", [])),
     },
+    "summary": impact.get("counts", {}),
     "files": {
         "auto_apply": impact.get("auto_apply", []),
         "merge_apply": impact.get("merge_apply", []),
