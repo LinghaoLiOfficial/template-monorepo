@@ -55,6 +55,12 @@ scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run
 scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0
 ```
 
+若希望在存在 `unknown` 文件时直接阻断（推荐用于严格团队流程）：
+
+```bash
+scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --fail-on-unknown
+```
+
 4. 处理冲突并确认 `manual_only` 文件不被误覆盖。
 5. 执行验证：
 
