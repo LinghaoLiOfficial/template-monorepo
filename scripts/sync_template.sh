@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Consumer-side sync entrypoint (Phase 2).
+# Consumer-side sync entrypoint (Phase 3 hardening).
 # Usage:
 #   scripts/sync_template.sh --from template-v1.2.0 --to template-v1.3.0
 
@@ -84,24 +84,39 @@ if [[ "$DRY_RUN" == "true" ]]; then
   exit 0
 fi
 
+apply_zone() {
+  local zone_name="$1"
+  local list_file="$2"
+
+  echo "Applying ${zone_name}"
+  if [[ ! -s "$list_file" ]]; then
+    echo "No ${zone_name} files"
+    return 0
+  fi
+
+  local -a files=()
+  while IFS= read -r line; do
+    [[ -n "$line" ]] && files+=("$line")
+  done < "$list_file"
+
+  if [[ ${#files[@]} -eq 0 ]]; then
+    echo "No ${zone_name} files"
+    return 0
+  fi
+
+  git diff --binary "$FROM_TAG" "$TO_TAG" -- "${files[@]}" | git apply --3way
+}
+
 echo "[3/6] Apply AUTO_APPLY files"
-if [[ -s "$AUTO_LIST" ]]; then
-  git diff --binary "$FROM_TAG" "$TO_TAG" -- $(cat "$AUTO_LIST") | git apply --3way
-else
-  echo "No AUTO_APPLY files"
-fi
+apply_zone "AUTO_APPLY" "$AUTO_LIST"
 
 echo "[4/6] Apply MERGE_APPLY files"
-if [[ -s "$MERGE_LIST" ]]; then
-  git diff --binary "$FROM_TAG" "$TO_TAG" -- $(cat "$MERGE_LIST") | git apply --3way
-else
-  echo "No MERGE_APPLY files"
-fi
+apply_zone "MERGE_APPLY" "$MERGE_LIST"
 
 echo "[5/6] Report MANUAL_ONLY files"
 if [[ -s "$MANUAL_LIST" ]]; then
   echo "Manual review required for:"
-  cat "$MANUAL_LIST" | sed 's/^/- /'
+  sed 's/^/- /' "$MANUAL_LIST"
 else
   echo "No MANUAL_ONLY files"
 fi
