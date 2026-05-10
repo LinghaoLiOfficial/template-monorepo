@@ -73,6 +73,12 @@ scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run -
 scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-summary.json --report-format summary
 ```
 
+若希望同时在终端打印报告（便于 CI 日志查看）：
+
+```bash
+scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-report.json --report-stdout
+```
+
 4. 处理冲突并确认 `manual_only` 文件不被误覆盖。
 5. 执行验证：
 
@@ -120,6 +126,7 @@ scripts/post_sync_verify.sh
 - 校验 manifest 严格合法（`--validate-only`）。
 - 校验同步脚本具备 `--dry-run` 路径。
 - 在模板自身仓库，使用 `HEAD~1 -> HEAD` 做 `--summary-only --strict` 分区检查。
+- 同步报告建议开启 `--report-stdout`，便于日志和 artifact 同时追踪。
 
 参考工作流：`.github/workflows/template-sync-ci.yml`。
 

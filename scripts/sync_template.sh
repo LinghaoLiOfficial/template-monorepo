@@ -11,6 +11,7 @@ DRY_RUN="false"
 FAIL_ON_UNKNOWN="false"
 REPORT_FILE=""
 REPORT_FORMAT="full"
+REPORT_STDOUT="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -38,6 +39,10 @@ while [[ $# -gt 0 ]]; do
       REPORT_FORMAT="$2"
       shift 2
       ;;
+    --report-stdout)
+      REPORT_STDOUT="true"
+      shift 1
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -46,7 +51,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$FROM_TAG" || -z "$TO_TAG" ]]; then
-  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>]"
+  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>] [--report-stdout]"
   exit 1
 fi
 
@@ -77,7 +82,7 @@ write_report() {
   if [[ -z "$REPORT_FILE" ]]; then
     return 0
   fi
-  python3 - <<'PY' "$IMPACT_JSON" "$REPORT_FILE" "$FROM_TAG" "$TO_TAG" "$DRY_RUN" "$FAIL_ON_UNKNOWN" "$status" "$blocked" "$REPORT_FORMAT"
+  python3 - <<'PY' "$IMPACT_JSON" "$REPORT_FILE" "$FROM_TAG" "$TO_TAG" "$DRY_RUN" "$FAIL_ON_UNKNOWN" "$status" "$blocked" "$REPORT_FORMAT" "$REPORT_STDOUT"
 import json
 import sys
 from pathlib import Path
@@ -106,8 +111,11 @@ if sys.argv[9] == "full":
         "manual_only": impact.get("manual_only", []),
         "unknown": impact.get("unknown", []),
     }
+payload = json.dumps(report, ensure_ascii=False, indent=2)
+if sys.argv[10] == "true":
+    print(payload)
 Path(sys.argv[2]).parent.mkdir(parents=True, exist_ok=True)
-Path(sys.argv[2]).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+Path(sys.argv[2]).write_text(payload, encoding="utf-8")
 PY
 }
 
