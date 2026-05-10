@@ -12,6 +12,7 @@ FAIL_ON_UNKNOWN="false"
 REPORT_FILE=""
 REPORT_FORMAT="full"
 REPORT_STDOUT="false"
+ARTIFACT_DIR=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -43,6 +44,10 @@ while [[ $# -gt 0 ]]; do
       REPORT_STDOUT="true"
       shift 1
       ;;
+    --artifact-dir)
+      ARTIFACT_DIR="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -51,13 +56,22 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$FROM_TAG" || -z "$TO_TAG" ]]; then
-  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>] [--report-stdout]"
+  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>] [--report-stdout] [--artifact-dir <path>]"
   exit 1
 fi
 
 if [[ "$REPORT_FORMAT" != "full" && "$REPORT_FORMAT" != "summary" ]]; then
   echo "Error: --report-format must be one of: full, summary"
   exit 1
+fi
+
+if [[ -n "$ARTIFACT_DIR" ]]; then
+  if [[ -z "$REPORT_FILE" ]]; then
+    REPORT_FILE="$ARTIFACT_DIR/sync-report.json"
+  fi
+  PATCH_DIR="$ARTIFACT_DIR/template-patches"
+else
+  PATCH_DIR="artifacts/template-patches"
 fi
 
 for tag in "$FROM_TAG" "$TO_TAG"; do
@@ -157,6 +171,17 @@ fi
 
 echo "[2/6] Build patch bundle"
 scripts/template/build_patch_bundle.sh "$FROM_TAG" "$TO_TAG"
+if [[ "$PATCH_DIR" != "artifacts/template-patches" ]]; then
+  mkdir -p "$PATCH_DIR"
+  LAST_PATCH="$(ls -t artifacts/template-patches/*.patch 2>/dev/null | head -n 1 || true)"
+  LAST_SUMMARY="$(ls -t artifacts/template-patches/*.summary.txt 2>/dev/null | head -n 1 || true)"
+  if [[ -n "$LAST_PATCH" ]]; then
+    mv "$LAST_PATCH" "$PATCH_DIR/"
+  fi
+  if [[ -n "$LAST_SUMMARY" ]]; then
+    mv "$LAST_SUMMARY" "$PATCH_DIR/"
+  fi
+fi
 
 if [[ "$DRY_RUN" == "true" ]]; then
   write_report "dry_run" "false"

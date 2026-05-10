@@ -79,6 +79,12 @@ scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run -
 scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-report.json --report-stdout
 ```
 
+若希望所有产物统一落到同一目录：
+
+```bash
+scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --artifact-dir artifacts/sync-run
+```
+
 4. 处理冲突并确认 `manual_only` 文件不被误覆盖。
 5. 执行验证：
 
