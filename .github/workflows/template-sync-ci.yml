@@ -28,6 +28,9 @@ jobs:
       - name: Python syntax check
         run: python3 -m py_compile scripts/template/check_sync_impact.py
 
+      - name: Manifest strict validation
+        run: python3 scripts/template/check_sync_impact.py --validate-only
+
       - name: Shell syntax check
         run: |
           bash -n scripts/template/release_template.sh
@@ -35,5 +38,10 @@ jobs:
           bash -n scripts/sync_template.sh
           bash -n scripts/post_sync_verify.sh
 
-      - name: Sync impact dry check
-        run: python3 scripts/template/check_sync_impact.py HEAD~1 --target-ref HEAD --output text || true
+      - name: Sync impact strict check
+        run: |
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            python3 scripts/template/check_sync_impact.py HEAD~1 --target-ref HEAD --output text --strict
+          else
+            echo "Skip strict diff check: repository has no HEAD~1"
+          fi

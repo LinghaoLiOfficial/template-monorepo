@@ -16,7 +16,7 @@
         - [BLOCK +] 已合并/省略 2 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
       - [FILE] `.github/workflows/template-sync-ci.yml`：YAML 配置（YAML Config），用于容器编排或 CI 流程定义。
         - [BLOCK 1] 该段围绕“name: template-sync-ci”展开（Content Block），承载一组相关实现或说明。
-        - [BLOCK +] 已合并/省略 5 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+        - [BLOCK +] 已合并/省略 6 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
   - [DIR] `backend`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
     - [DIR] `backend/alembic`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
       - [DIR] `backend/alembic/versions`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
