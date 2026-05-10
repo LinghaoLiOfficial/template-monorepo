@@ -1,0 +1,54 @@
+version: 1
+
+# Template upstream sync policy for consumer projects.
+# - auto_apply: files can be directly updated from upstream template.
+# - merge_apply: files should use 3-way merge strategy.
+# - manual_only: files are project-owned and require manual review.
+
+zones:
+  auto_apply:
+    - .github/workflows/**
+    - .githooks/**
+    - docs/process/**
+    - scripts/check_*.py
+    - scripts/generate_project_map.py
+    - scripts/check_project_map.py
+
+  merge_apply:
+    - pyproject.toml
+    - backend/pyproject.toml
+    - frontend/package.json
+    - frontend/eslint.config.*
+    - frontend/tsconfig.json
+    - backend/app/core/config.py
+    - docker-compose.yml
+    - README.md
+
+  manual_only:
+    - backend/app/domain/**
+    - backend/app/application/**
+    - backend/app/api/**
+    - frontend/app/**
+    - frontend/features/**
+    - frontend/components/**
+    - .env
+    - .env.*
+    - '!*.example'
+
+rules:
+  deny_delete:
+    - backend/app/domain/**
+    - frontend/features/**
+
+  require_manual_review_when_changed:
+    - AGENTS.md
+    - SPRINT.md
+    - BACKLOG.md
+    - CHANGELOG.md
+
+metadata:
+  owner: template-maintainers
+  default_branch: main
+  notes:
+    - "Keep business-domain files in manual_only to avoid accidental override."
+    - "Do not sync secrets or environment-specific files from upstream."
