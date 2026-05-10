@@ -401,12 +401,12 @@
         - [BLOCK +] 已合并/省略 6 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
       - [FILE] `scripts/template/check_sync_impact.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
         - [BLOCK 1] 该段定义“!/usr/bin/env python3”主题（Topic），用于组织本文件的核心语义边界。
-        - [BLOCK 2] 该段围绕“Phase 2:”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK 2] 该段围绕“This script keeps zero third-party depende”展开（Content Block），承载一组相关实现或说明。
         - [BLOCK 3] 该段声明依赖导入（Imports），为后续实现提供模块能力与类型引用。
         - [BLOCK 4] 该段围绕“MANIFEST = Path('.template-sync-manifest.y”展开（Content Block），承载一组相关实现或说明。
         - [BLOCK 5] 该段定义函数 `run`（Function），封装一个可复用的处理步骤。
         - [BLOCK 6] 该段定义函数 `get_changed_files`（Function），封装一个可复用的处理步骤。
-        - [BLOCK +] 已合并/省略 21 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+        - [BLOCK +] 已合并/省略 51 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
       - [FILE] `scripts/template/release_template.sh`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
         - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
         - [BLOCK 2] 该段定义“Release a new template version tag and generate simple release notes.”主题（Topic），用于组织本文件的核心语义边界。
