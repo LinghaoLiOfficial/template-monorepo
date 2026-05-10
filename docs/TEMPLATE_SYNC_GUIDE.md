@@ -61,6 +61,12 @@ scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0
 scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --fail-on-unknown
 ```
 
+若希望产出机器可读报告（JSON）用于 CI 归档与审计：
+
+```bash
+scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-report.json
+```
+
 4. 处理冲突并确认 `manual_only` 文件不被误覆盖。
 5. 执行验证：
 

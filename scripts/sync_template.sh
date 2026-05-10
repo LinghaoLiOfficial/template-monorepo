@@ -9,6 +9,7 @@ FROM_TAG=""
 TO_TAG=""
 DRY_RUN="false"
 FAIL_ON_UNKNOWN="false"
+REPORT_FILE=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -28,6 +29,10 @@ while [[ $# -gt 0 ]]; do
       FAIL_ON_UNKNOWN="true"
       shift 1
       ;;
+    --report-file)
+      REPORT_FILE="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -36,7 +41,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$FROM_TAG" || -z "$TO_TAG" ]]; then
-  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown]"
+  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>]"
   exit 1
 fi
 
@@ -55,6 +60,43 @@ AUTO_LIST="$TMP_DIR/auto_apply.txt"
 MERGE_LIST="$TMP_DIR/merge_apply.txt"
 MANUAL_LIST="$TMP_DIR/manual_only.txt"
 UNKNOWN_COUNT_FILE="$TMP_DIR/unknown_count.txt"
+
+write_report() {
+  local status="$1"
+  local blocked="$2"
+  if [[ -z "$REPORT_FILE" ]]; then
+    return 0
+  fi
+  python3 - <<'PY' "$IMPACT_JSON" "$REPORT_FILE" "$FROM_TAG" "$TO_TAG" "$DRY_RUN" "$FAIL_ON_UNKNOWN" "$status" "$blocked"
+import json
+import sys
+from pathlib import Path
+
+impact = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+report = {
+    "from_tag": sys.argv[3],
+    "to_tag": sys.argv[4],
+    "dry_run": sys.argv[5] == "true",
+    "fail_on_unknown": sys.argv[6] == "true",
+    "status": sys.argv[7],
+    "blocked_by_unknown": sys.argv[8] == "true",
+    "counts": {
+        "auto_apply": len(impact.get("auto_apply", [])),
+        "merge_apply": len(impact.get("merge_apply", [])),
+        "manual_only": len(impact.get("manual_only", [])),
+        "unknown": len(impact.get("unknown", [])),
+    },
+    "files": {
+        "auto_apply": impact.get("auto_apply", []),
+        "merge_apply": impact.get("merge_apply", []),
+        "manual_only": impact.get("manual_only", []),
+        "unknown": impact.get("unknown", []),
+    },
+}
+Path(sys.argv[2]).parent.mkdir(parents=True, exist_ok=True)
+Path(sys.argv[2]).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+PY
+}
 
 echo "[1/6] Analyze sync impact"
 python3 scripts/template/check_sync_impact.py "$FROM_TAG" --target-ref "$TO_TAG" --output json > "$IMPACT_JSON"
@@ -86,6 +128,7 @@ PY
 
 UNKNOWN_COUNT="$(cat "$UNKNOWN_COUNT_FILE")"
 if [[ "$FAIL_ON_UNKNOWN" == "true" && "$UNKNOWN_COUNT" != "0" ]]; then
+  write_report "blocked" "true"
   echo "Error: unknown files detected (${UNKNOWN_COUNT}), aborting due to --fail-on-unknown."
   echo "Action: update .template-sync-manifest.yaml zones before syncing."
   exit 3
@@ -95,6 +138,7 @@ echo "[2/6] Build patch bundle"
 scripts/template/build_patch_bundle.sh "$FROM_TAG" "$TO_TAG"
 
 if [[ "$DRY_RUN" == "true" ]]; then
+  write_report "dry_run" "false"
   echo "[3/6] Dry-run mode: no file modification"
   echo "Suggested next: rerun without --dry-run"
   exit 0
@@ -138,3 +182,4 @@ else
 fi
 
 echo "[6/6] Done. Run verification: scripts/post_sync_verify.sh"
+write_report "applied" "false"
