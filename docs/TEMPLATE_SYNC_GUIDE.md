@@ -67,6 +67,12 @@ scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --fail-on-u
 scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-report.json
 ```
 
+若只需要计数摘要报告（更适合 CI 精简日志）：
+
+```bash
+scripts/sync_template.sh --from template-v0.9.0 --to template-v1.0.0 --dry-run --report-file artifacts/sync-summary.json --report-format summary
+```
+
 4. 处理冲突并确认 `manual_only` 文件不被误覆盖。
 5. 执行验证：
 

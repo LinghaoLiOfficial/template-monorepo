@@ -10,6 +10,7 @@ TO_TAG=""
 DRY_RUN="false"
 FAIL_ON_UNKNOWN="false"
 REPORT_FILE=""
+REPORT_FORMAT="full"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -33,6 +34,10 @@ while [[ $# -gt 0 ]]; do
       REPORT_FILE="$2"
       shift 2
       ;;
+    --report-format)
+      REPORT_FORMAT="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -41,7 +46,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$FROM_TAG" || -z "$TO_TAG" ]]; then
-  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>]"
+  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>]"
+  exit 1
+fi
+
+if [[ "$REPORT_FORMAT" != "full" && "$REPORT_FORMAT" != "summary" ]]; then
+  echo "Error: --report-format must be one of: full, summary"
   exit 1
 fi
 
@@ -67,7 +77,7 @@ write_report() {
   if [[ -z "$REPORT_FILE" ]]; then
     return 0
   fi
-  python3 - <<'PY' "$IMPACT_JSON" "$REPORT_FILE" "$FROM_TAG" "$TO_TAG" "$DRY_RUN" "$FAIL_ON_UNKNOWN" "$status" "$blocked"
+  python3 - <<'PY' "$IMPACT_JSON" "$REPORT_FILE" "$FROM_TAG" "$TO_TAG" "$DRY_RUN" "$FAIL_ON_UNKNOWN" "$status" "$blocked" "$REPORT_FORMAT"
 import json
 import sys
 from pathlib import Path
@@ -80,6 +90,7 @@ report = {
     "fail_on_unknown": sys.argv[6] == "true",
     "status": sys.argv[7],
     "blocked_by_unknown": sys.argv[8] == "true",
+    "report_format": sys.argv[9],
     "counts": {
         "auto_apply": len(impact.get("auto_apply", [])),
         "merge_apply": len(impact.get("merge_apply", [])),
@@ -87,13 +98,14 @@ report = {
         "unknown": len(impact.get("unknown", [])),
     },
     "summary": impact.get("counts", {}),
-    "files": {
+}
+if sys.argv[9] == "full":
+    report["files"] = {
         "auto_apply": impact.get("auto_apply", []),
         "merge_apply": impact.get("merge_apply", []),
         "manual_only": impact.get("manual_only", []),
         "unknown": impact.get("unknown", []),
-    },
-}
+    }
 Path(sys.argv[2]).parent.mkdir(parents=True, exist_ok=True)
 Path(sys.argv[2]).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 PY
