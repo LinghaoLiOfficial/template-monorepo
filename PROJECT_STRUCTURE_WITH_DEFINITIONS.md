@@ -295,7 +295,7 @@
         - [BLOCK 1] 该文件为占位文本（Placeholder），当前无可解析内容。
       - [FILE] `backend/tests/conftest.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
         - [BLOCK 1] 该段声明依赖导入（Imports），为后续实现提供模块能力与类型引用。
-        - [BLOCK 2] 该段围绕“@pytest.fixture”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK 2] 该段围绕“@pytest_asyncio.fixture”展开（Content Block），承载一组相关实现或说明。
         - [BLOCK +] 已合并/省略 2 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
     - [FILE] `backend/.env.example`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
       - [BLOCK 1] 该段围绕“APP_NAME=myapp”展开（Content Block），承载一组相关实现或说明。

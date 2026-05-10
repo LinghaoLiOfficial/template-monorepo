@@ -1,0 +1,39 @@
+name: template-sync-ci
+
+on:
+  push:
+    paths:
+      - '.template-sync-manifest.yaml'
+      - 'scripts/template/**'
+      - 'scripts/sync_template.sh'
+      - 'scripts/post_sync_verify.sh'
+      - 'docs/TEMPLATE_SYNC_GUIDE.md'
+      - '.github/workflows/template-sync-ci.yml'
+  pull_request:
+    paths:
+      - '.template-sync-manifest.yaml'
+      - 'scripts/template/**'
+      - 'scripts/sync_template.sh'
+      - 'scripts/post_sync_verify.sh'
+      - 'docs/TEMPLATE_SYNC_GUIDE.md'
+      - '.github/workflows/template-sync-ci.yml'
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Python syntax check
+        run: python3 -m py_compile scripts/template/check_sync_impact.py
+
+      - name: Shell syntax check
+        run: |
+          bash -n scripts/template/release_template.sh
+          bash -n scripts/template/build_patch_bundle.sh
+          bash -n scripts/sync_template.sh
+          bash -n scripts/post_sync_verify.sh
+
+      - name: Sync impact dry check
+        run: python3 scripts/template/check_sync_impact.py HEAD~1 --target-ref HEAD --output text || true
