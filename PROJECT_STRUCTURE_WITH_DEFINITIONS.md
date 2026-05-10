@@ -349,7 +349,7 @@
       - [BLOCK 4] 该段定义“2. 核心原则（Core Principles）”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 5] 该段围绕“- 模板优先（Template-first）：工程基座改进优先沉淀到模板仓库。”展开（Content Block），承载一组相关实现或说明。
       - [BLOCK 6] 该段定义“3. 关键文件（Key Files）”主题（Topic），用于组织本文件的核心语义边界。
-      - [BLOCK +] 已合并/省略 41 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+      - [BLOCK +] 已合并/省略 43 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
   - [DIR] `frontend`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
     - [DIR] `frontend/src`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
       - [DIR] `frontend/src/app`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
@@ -445,7 +445,7 @@
       - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 2] 该段定义“Consumer-side sync entrypoint (Phase 3 hardening).”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 3] 该段围绕“FROM_TAG=""”展开（Content Block），承载一组相关实现或说明。
-      - [BLOCK +] 已合并/省略 25 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+      - [BLOCK +] 已合并/省略 26 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
     - [FILE] `scripts/verify_setup.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
       - [BLOCK 1] 该段定义“!/usr/bin/env python3”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 2] 该段围绕“验证 /setup 执行后的仓库就绪性是否满足规范要求。”展开（Content Block），承载一组相关实现或说明。

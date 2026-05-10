@@ -13,6 +13,7 @@ REPORT_FILE=""
 REPORT_FORMAT="full"
 REPORT_STDOUT="false"
 ARTIFACT_DIR=""
+CLEAN_ARTIFACTS="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -48,6 +49,10 @@ while [[ $# -gt 0 ]]; do
       ARTIFACT_DIR="$2"
       shift 2
       ;;
+    --clean-artifacts)
+      CLEAN_ARTIFACTS="true"
+      shift 1
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -56,7 +61,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$FROM_TAG" || -z "$TO_TAG" ]]; then
-  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>] [--report-stdout] [--artifact-dir <path>]"
+  echo "Usage: $0 --from <template-tag> --to <template-tag> [--dry-run] [--fail-on-unknown] [--report-file <path>] [--report-format <full|summary>] [--report-stdout] [--artifact-dir <path>] [--clean-artifacts]"
   exit 1
 fi
 
@@ -72,6 +77,13 @@ if [[ -n "$ARTIFACT_DIR" ]]; then
   PATCH_DIR="$ARTIFACT_DIR/template-patches"
 else
   PATCH_DIR="artifacts/template-patches"
+fi
+
+if [[ "$CLEAN_ARTIFACTS" == "true" ]]; then
+  rm -rf "$PATCH_DIR"
+  if [[ -n "$REPORT_FILE" ]]; then
+    rm -f "$REPORT_FILE"
+  fi
 fi
 
 for tag in "$FROM_TAG" "$TO_TAG"; do
