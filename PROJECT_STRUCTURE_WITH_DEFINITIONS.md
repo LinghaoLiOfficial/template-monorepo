@@ -14,6 +14,9 @@
       - [FILE] `.github/workflows/frontend-ci.yml`：YAML 配置（YAML Config），用于容器编排或 CI 流程定义。
         - [BLOCK 1] 该段围绕“name: frontend-ci”展开（Content Block），承载一组相关实现或说明。
         - [BLOCK +] 已合并/省略 2 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+      - [FILE] `.github/workflows/template-sync-ci.yml`：YAML 配置（YAML Config），用于容器编排或 CI 流程定义。
+        - [BLOCK 1] 该段围绕“name: template-sync-ci”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK +] 已合并/省略 5 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
   - [DIR] `backend`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
     - [DIR] `backend/alembic`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
       - [DIR] `backend/alembic/versions`：后端目录（Backend），实现 FastAPI 服务、分层业务能力与测试保障。
@@ -339,6 +342,14 @@
       - [BLOCK 5] 该段定义“2) 后端 `backend/.env.example`”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 6] 该段定义“基础配置”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK +] 已合并/省略 9 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+    - [FILE] `docs/TEMPLATE_SYNC_GUIDE.md`：说明文档（Documentation File），用于沉淀规则、设计与执行说明。
+      - [BLOCK 1] 该段定义“模板上游同步指南（Template Upstream Sync Guide）”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 2] 该段定义“1. 目标（Goal）”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 3] 该段围绕“本指南定义“模板仓库（Template Repo）”与“消费仓库（Consumer ”展开（Content Block），承载一组相关实现或说明。
+      - [BLOCK 4] 该段定义“2. 核心原则（Core Principles）”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 5] 该段围绕“- 模板优先（Template-first）：工程基座改进优先沉淀到模板仓库。”展开（Content Block），承载一组相关实现或说明。
+      - [BLOCK 6] 该段定义“3. 关键文件（Key Files）”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK +] 已合并/省略 31 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
   - [DIR] `frontend`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
     - [DIR] `frontend/src`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
       - [DIR] `frontend/src/app`：前端目录（Frontend），实现 Next.js 页面、组件体系与构建配置。
@@ -382,6 +393,25 @@
     - [FILE] `frontend/tsconfig.json`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
       - [BLOCK 1] 该段围绕“{”展开（Content Block），承载一组相关实现或说明。
   - [DIR] `scripts`：脚本目录（Scripts），提供项目自动化生成、检查与维护命令。
+    - [DIR] `scripts/template`：脚本目录（Scripts），提供项目自动化生成、检查与维护命令。
+      - [FILE] `scripts/template/build_patch_bundle.sh`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
+        - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
+        - [BLOCK 2] 该段定义“Build patch bundle between two template tags.”主题（Topic），用于组织本文件的核心语义边界。
+        - [BLOCK 3] 该段围绕“if [[ $# -ne 2 ]]; then”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK +] 已合并/省略 6 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+      - [FILE] `scripts/template/check_sync_impact.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
+        - [BLOCK 1] 该段定义“!/usr/bin/env python3”主题（Topic），用于组织本文件的核心语义边界。
+        - [BLOCK 2] 该段围绕“Phase 2:”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK 3] 该段声明依赖导入（Imports），为后续实现提供模块能力与类型引用。
+        - [BLOCK 4] 该段围绕“MANIFEST = Path('.template-sync-manifest.y”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK 5] 该段定义函数 `run`（Function），封装一个可复用的处理步骤。
+        - [BLOCK 6] 该段定义函数 `get_changed_files`（Function），封装一个可复用的处理步骤。
+        - [BLOCK +] 已合并/省略 21 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+      - [FILE] `scripts/template/release_template.sh`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
+        - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
+        - [BLOCK 2] 该段定义“Release a new template version tag and generate simple release notes.”主题（Topic），用于组织本文件的核心语义边界。
+        - [BLOCK 3] 该段围绕“if [[ $# -ne 1 ]]; then”展开（Content Block），承载一组相关实现或说明。
+        - [BLOCK +] 已合并/省略 8 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
     - [FILE] `scripts/check_env_replacements.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
       - [BLOCK 1] 该段定义“!/usr/bin/env python3”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 2] 该段声明依赖导入（Imports），为后续实现提供模块能力与类型引用。
@@ -406,6 +436,16 @@
       - [BLOCK 5] 该段定义函数 `dir_def`（Function），封装一个可复用的处理步骤。
       - [BLOCK 6] 该段定义函数 `file_def`（Function），封装一个可复用的处理步骤。
       - [BLOCK +] 已合并/省略 15 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+    - [FILE] `scripts/post_sync_verify.sh`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
+      - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 2] 该段定义“Unified post-sync verification for consumer repositories.”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 3] 该段围绕“echo "[verify] Project map sync"”展开（Content Block），承载一组相关实现或说明。
+      - [BLOCK +] 已合并/省略 3 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
+    - [FILE] `scripts/sync_template.sh`：工程文件（Project Artifact），用于支撑模块运行、配置或质量保障。
+      - [BLOCK 1] 该段定义“!/usr/bin/env bash”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 2] 该段定义“Consumer-side sync entrypoint (Phase 2).”主题（Topic），用于组织本文件的核心语义边界。
+      - [BLOCK 3] 该段围绕“FROM_TAG=""”展开（Content Block），承载一组相关实现或说明。
+      - [BLOCK +] 已合并/省略 14 个相似或次要段落块（Merged/Omitted Blocks）以保持全局可读性。
     - [FILE] `scripts/verify_setup.py`：Python 模块（Python Module），承载后端逻辑、脚本任务或测试用例。
       - [BLOCK 1] 该段定义“!/usr/bin/env python3”主题（Topic），用于组织本文件的核心语义边界。
       - [BLOCK 2] 该段围绕“验证 /setup 执行后的仓库就绪性是否满足规范要求。”展开（Content Block），承载一组相关实现或说明。
